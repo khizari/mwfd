@@ -42,6 +42,7 @@ p:last-child{margin-bottom:0}
   --radius-sm:10px;
   --shadow:0 4px 24px rgba(0,0,0,.08);
   --shadow-hover:0 12px 40px rgba(0,0,0,.14);
+  --header-h:70px; /* adjust to match your actual header height */
 }
 
 /* ── SCROLL REVEAL ── */
@@ -63,13 +64,23 @@ p:last-child{margin-bottom:0}
 
 /* ── HERO ── */
 .hero{
-  position:relative;overflow:hidden;
-  height:420px;
+  position:relative;
+  overflow:hidden;
+  min-height:420px;
   background:#1a1a2e;
+  /* push content below fixed header */
+  padding-top:var(--header-h);
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
 }
 .hero-img{
-  width:100%;height:100%;
-  object-fit:cover;object-position:center top;
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center top;
   opacity:.48;
   transition:transform 7s ease;
 }
@@ -77,15 +88,15 @@ p:last-child{margin-bottom:0}
 .hero::after{
   content:'';position:absolute;inset:0;
   background:linear-gradient(to bottom,rgba(26,26,46,.1) 0%,rgba(26,26,46,.78) 100%);
+  pointer-events:none;
 }
 .hero-overlay{
-  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  position:relative;
+  z-index:2;
   padding:32px 28px 44px;
   max-width:1240px;
   width:100%;
   margin:0 auto;
-  left:50%;
-  transform:translateX(-50%);
 }
 .breadcrumb{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,255,.5);margin-bottom:18px}
 .breadcrumb a{color:rgba(255,255,255,.5);transition:color .2s}
@@ -360,7 +371,31 @@ p:last-child{margin-bottom:0}
   .cta-strip{flex-direction:column;padding:28px 22px;text-align:center}
 }
 @media(max-width:700px){
-  .hero{height:320px}
+  /* ── HERO MOBILE FIX ── */
+  .hero{
+    min-height:auto;
+    height:auto;
+    padding-top:64px; /* match your header height on mobile */
+    padding-bottom:0;
+  }
+  .hero-overlay{
+    padding:20px 18px 32px;
+  }
+  .hero h1{
+    font-size:clamp(22px,6vw,32px);
+  }
+  .hero-subtitle{
+    font-size:14px;
+  }
+  .hero-btns{
+    flex-direction:column;
+    gap:10px;
+  }
+  .btn-gold,.btn-outline{
+    width:100%;
+    justify-content:center;
+  }
+  /* ── END HERO MOBILE FIX ── */
   .values{grid-template-columns:1fr}
   .reviews-grid{grid-template-columns:1fr}
   .team-grid{grid-template-columns:repeat(2,1fr)}
@@ -375,6 +410,9 @@ p:last-child{margin-bottom:0}
 @media(max-width:400px){
   .stats-inner{grid-template-columns:repeat(2,1fr)}
   .office-grid{grid-template-columns:1fr}
+  .hero{
+    padding-top:60px;
+  }
 }
 </style>
 </head>
@@ -386,6 +424,7 @@ p:last-child{margin-bottom:0}
      HERO — photo-based, matching History page style
      ═══════════════════════════════════════════════ -->
 <div class="hero">
+  <!-- Image is absolute so overlay content can flow naturally -->
   <img class="hero-img" src="assets/history-1.webp" alt="Marketing with Fahad Dubai Office">
   <div class="hero-overlay">
     <nav class="breadcrumb" aria-label="Breadcrumb">
@@ -444,9 +483,8 @@ p:last-child{margin-bottom:0}
     </div>
   </div>
 </div>
-<!-- ═══════════════════════════════════════════════
-     OUR STORY (from History page — richer content)
-     ═══════════════════════════════════════════════ -->
+
+<!-- OUR STORY -->
 <section class="section section-white" aria-labelledby="story-heading">
   <div class="section-inner">
     <div class="sec-divider reveal">
@@ -462,9 +500,7 @@ p:last-child{margin-bottom:0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     MISSION & VALUES
-     ═══════════════════════════════════════════════ -->
+<!-- MISSION & VALUES -->
 <section class="section section-bg" aria-labelledby="mission-heading">
   <div class="section-inner">
     <div class="mission-grid">
@@ -512,9 +548,7 @@ p:last-child{margin-bottom:0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     TEAM — Real photos (from History page)
-     ═══════════════════════════════════════════════ -->
+<!-- TEAM -->
 <section class="section section-white" aria-labelledby="team-heading" style="padding-top:52px;padding-bottom:52px">
   <div class="section-inner">
     <div class="sec-head reveal">
@@ -552,9 +586,7 @@ p:last-child{margin-bottom:0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     GOOGLE REVIEWS
-     ═══════════════════════════════════════════════ -->
+<!-- GOOGLE REVIEWS -->
 <div class="section section-bg" role="region" aria-label="Client reviews">
   <div class="reviews-inner">
     <div class="reviews-header reveal">
@@ -588,9 +620,7 @@ p:last-child{margin-bottom:0}
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     GROWTH TIMELINE (merged best of both)
-     ═══════════════════════════════════════════════ -->
+<!-- GROWTH TIMELINE -->
 <section class="section section-white" aria-labelledby="journey-heading">
   <div class="section-inner">
     <div class="sec-head reveal">
@@ -649,9 +679,7 @@ p:last-child{margin-bottom:0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     DUBAI OFFICE PHOTOS (from History page)
-     ═══════════════════════════════════════════════ -->
+<!-- DUBAI OFFICE PHOTOS -->
 <section class="section section-bg" aria-labelledby="office-heading">
   <div class="section-inner">
     <div class="sec-divider reveal">
@@ -675,9 +703,7 @@ p:last-child{margin-bottom:0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     CTA STRIP
-     ═══════════════════════════════════════════════ -->
+<!-- CTA STRIP -->
 <div class="section section-white" style="padding-top:0;padding-bottom:80px">
   <div class="section-inner">
     <div class="cta-strip reveal">
@@ -693,9 +719,7 @@ p:last-child{margin-bottom:0}
   </div>
 </div>
 
-<!-- ═══════════════════════════════════════════════
-     FAQ (7 unique questions, no duplicates)
-     ═══════════════════════════════════════════════ -->
+<!-- FAQ -->
 <section class="section section-bg" aria-labelledby="faq-heading" style="overflow:visible">
   <div class="faq-inner-grid">
     <div class="faq-left rev-l">
@@ -783,9 +807,7 @@ p:last-child{margin-bottom:0}
   </div>
 </section>
 
-<!-- ═══════════════════════════════════════════════
-     FINAL CTA
-     ═══════════════════════════════════════════════ -->
+<!-- FINAL CTA -->
 <section class="final-cta" aria-labelledby="cta-heading">
   <div class="final-cta-inner reveal">
     <div class="cta-badge">Start Growing Today</div>
@@ -805,7 +827,6 @@ p:last-child{margin-bottom:0}
 <div id="footer-placeholder"></div>
 
 <script>
-/* ── Load header & footer ── */
 async function loadComponent(id, file) {
   try {
     const res = await fetch(file);
@@ -848,11 +869,18 @@ async function loadComponent(id, file) {
 document.addEventListener('DOMContentLoaded', async () => {
   await loadComponent('header-placeholder', 'header.html');
   await loadComponent('footer-placeholder', 'footer.html');
+
+  /* After header loads, read its actual height and apply to hero */
+  const header = document.querySelector('#header-placeholder > *') || document.querySelector('header');
+  if (header) {
+    const h = header.offsetHeight;
+    document.documentElement.style.setProperty('--header-h', h + 'px');
+  }
+
   initPage();
 });
 
 function initPage() {
-  /* Scroll reveal */
   const revObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (e.isIntersecting) { e.target.classList.add('on'); revObs.unobserve(e.target); }
@@ -860,7 +888,6 @@ function initPage() {
   }, { threshold: 0.08, rootMargin:'0px 0px -30px 0px' });
   document.querySelectorAll('.reveal,.rev-l,.rev-r,.tl-item').forEach(el => revObs.observe(el));
 
-  /* Counter animation */
   const cObs = new IntersectionObserver(entries => {
     entries.forEach(e => {
       if (!e.isIntersecting) return;
@@ -878,7 +905,6 @@ function initPage() {
   }, { threshold: 0.5 });
   document.querySelectorAll('.stat-num[data-t]').forEach(el => cObs.observe(el));
 
-  /* FAQ accordion */
   document.querySelectorAll('.faq-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const item = btn.closest('.faq-item');
