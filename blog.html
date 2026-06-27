@@ -32,7 +32,12 @@
       --gold:        #C9A96E;
       --gold-dark:   #B8985E;
       --gold-light:  rgba(201,169,110,.12);
+      --gold-border: #E4D4B8;       /* FIX: was referenced by .faq-section but never defined */
+      --gold-shadow: rgba(201,169,110,.30); /* FIX: was referenced by .faq-cta but never defined */
       --black:       #0F172A;
+      --dark:        #0F172A;       /* FIX: alias so .faq-heading / .faq-btn (which use --dark) resolve */
+      --white:       #ffffff;       /* FIX: was referenced by .faq-section but never defined */
+      --muted:       #475569;       /* FIX: was referenced by .faq-desc/.faq-content-inner but never defined */
       --gray-50:     #F8FAFC;
       --gray-100:    #F1F5F9;
       --gray-200:    #E2E8F0;
@@ -94,6 +99,16 @@
        your own photo. Keep it under ~300KB; a 1920×1080
        desktop crop and a separate ~960×1280 portrait-ish
        mobile crop both load fastest and frame better.
+
+       FIX: min-height: 100vh had no ceiling, so on short
+       physical screens reporting a "desktop" width — e.g.
+       Chrome's "Desktop site" mode on a phone, which reports
+       a layout viewport of ~980px+ regardless of the real
+       screen size — the hero filled almost the entire visible
+       area with very little of the photo actually showing.
+       A max-height plus a dedicated "fake desktop" breakpoint
+       (1024px down to 769px) fixes this without touching the
+       real mobile (<=768px) or real desktop (>1024px) rules.
     ══════════════════════════════════════════ */
     .blog-header {
       --hero-img: url('assets/blog-hero-bg.webp');
@@ -103,6 +118,8 @@
       overflow: hidden;
       isolation: isolate;
       min-height: 100vh;
+      max-height: 720px;      /* FIX: caps hero height on any "wide" viewport, including
+                                  Chrome desktop-mode on a phone with a short screen */
       display: flex;
       flex-direction: column;
       color: #fff;
@@ -391,6 +408,7 @@
        Responsive breakpoints
        Desktop: > 1024px (default rules above)
        Laptop:  1024px → tighten paddings/gaps a touch
+       Fake-desktop band: 769–1024px → see note below
        Tablet:  768–900px → single-column FAQ, smaller hero motif
        Mobile:  ≤ 600px → stacked cards, compact hero/FAQ
        Small:   ≤ 480px → tightest spacing, motif hidden
@@ -403,6 +421,31 @@
       .faq-inner { gap: 36px; }
     }
 
+    /* ══════════════════════════════════════════
+       FIX — "fake desktop" band (769px–1024px)
+       This is the width range mobile Chrome reports when
+       "Desktop site" mode is on, even though the physical
+       screen is a short, narrow phone. The unmodified desktop
+       hero (50%-width text column + full desktop photo crop)
+       looks oversized and unbalanced at this width on a short
+       screen, so this band tightens the hero specifically here
+       without touching real tablets/laptops above 1024px or
+       the dedicated mobile rules at 768px and below.
+    ══════════════════════════════════════════ */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .blog-header {
+        max-height: 560px;
+        min-height: 440px;
+      }
+      .blog-header__content.container {
+        max-width: 64%;
+        padding-right: 16px;
+      }
+      .blog-header__title { font-size: clamp(28px, 4.4vw, 40px); }
+      .blog-header__subtitle { font-size: 14.5px; max-width: 460px; }
+      .blog-header__nav a { padding: 8px 16px; font-size: 12.5px; }
+    }
+
     /* ── Tablet ── */
     @media (max-width: 900px) {
       .faq-inner { grid-template-columns: 1fr; gap: 32px; }
@@ -412,6 +455,7 @@
       :root { --section-pad-y: 48px; }
       .blog-grid { grid-template-columns: 1fr; gap: 20px; }
       .blog-header {
+        max-height: none;   /* real mobile keeps the original full min-height: 100vh feel */
         /* swap to a portrait-friendly crop and switch the gradient
            to top-down so it still reads well behind shorter text blocks */
         background-image:
