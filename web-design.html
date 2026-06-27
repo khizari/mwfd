@@ -43,7 +43,12 @@
    RESET & BASE
    =========================== */
 *, *::before, *::after { box-sizing: border-box; outline: none; }
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  /* FIX: prevent horizontal scroll at root */
+  overflow-x: hidden;
+  width: 100%;
+}
 body {
   margin: 0;
   font-family: var(--font);
@@ -51,7 +56,10 @@ body {
   line-height: 1.65;
   color: var(--text);
   background: var(--body-bg);
-  overflow-x: clip;
+  /* FIX: use hidden instead of clip — clip breaks on mobile Safari */
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 img { max-width: 100%; height: auto; display: block; }
 a { color: var(--gold); text-decoration: none; transition: color var(--transition); }
@@ -70,6 +78,10 @@ input, select, textarea, button { font-family: var(--font); }
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 22px;
+}
+/* FIX: every section clips its own decorative overflows */
+section {
+  overflow-x: hidden;
 }
 
 /* ===========================
@@ -99,6 +111,8 @@ input, select, textarea, button { font-family: var(--font); }
   flex: 1;
   height: 1px;
   background: linear-gradient(to right, var(--gold-border), transparent);
+  /* FIX: prevent line from expanding beyond container */
+  min-width: 0;
 }
 .section-divider--center { justify-content: center; }
 .section-divider--center .section-divider__line:first-of-type {
@@ -155,6 +169,7 @@ input, select, textarea, button { font-family: var(--font); }
   padding: 72px 0 80px;
   border-bottom: 1px solid var(--border);
   position: relative;
+  /* FIX: clip decorative circle within hero */
   overflow: hidden;
 }
 .hero::before {
@@ -165,6 +180,8 @@ input, select, textarea, button { font-family: var(--font); }
   border-radius: 50%;
   background: radial-gradient(circle, rgba(201,169,110,0.09) 0%, transparent 70%);
   pointer-events: none;
+  /* FIX: ensure it never causes scrollbar */
+  max-width: 100vw;
 }
 .hero__grid {
   display: grid;
@@ -253,6 +270,8 @@ input, select, textarea, button { font-family: var(--font); }
   overflow: hidden;
   opacity: 0;
   animation: fadeSlideUp 0.6s 0.55s forwards;
+  /* FIX: prevent strip from overflowing container */
+  width: 100%;
 }
 .hero__proof-item {
   background: #ffffff;
@@ -261,6 +280,8 @@ input, select, textarea, button { font-family: var(--font); }
   flex-direction: column;
   gap: 6px;
   transition: background 0.15s ease;
+  /* FIX: allow wrapping content */
+  min-width: 0;
 }
 .hero__proof-item:hover { background: #f9f9f9; }
 .hero__proof-icon {
@@ -269,6 +290,7 @@ input, select, textarea, button { font-family: var(--font); }
   display: flex; align-items: center; justify-content: center;
   font-size: 16px;
   margin-bottom: 4px;
+  flex-shrink: 0;
 }
 .hero__proof-icon.gold  { background: #FAEEDA; color: #854F0B; }
 .hero__proof-icon.blue  { background: #E6F1FB; color: #185FA5; }
@@ -281,6 +303,8 @@ input, select, textarea, button { font-family: var(--font); }
   color: var(--dark);
   line-height: 1.1;
   letter-spacing: -0.5px;
+  /* FIX: prevent overflow of large numbers */
+  word-break: break-word;
 }
 .hero__proof-item > span {
   font-size: 12px;
@@ -299,6 +323,9 @@ input, select, textarea, button { font-family: var(--font); }
   width: fit-content;
   text-transform: uppercase;
   letter-spacing: 0.3px;
+  /* FIX: prevent badge overflow */
+  max-width: 100%;
+  flex-shrink: 0;
 }
 .hero__proof-badge.green { background: #EAF3DE; color: #3B6D11; }
 .hero__proof-badge.blue  { background: #E6F1FB; color: #185FA5; }
@@ -311,6 +338,9 @@ input, select, textarea, button { font-family: var(--font); }
   padding: 32px 28px;
   opacity: 0;
   animation: fadeSlideRight 0.6s 0.3s forwards;
+  /* FIX: prevent card overflow on narrow screens */
+  min-width: 0;
+  width: 100%;
 }
 .hero-form-card__header {
   display: flex;
@@ -357,6 +387,8 @@ input, select, textarea, button { font-family: var(--font); }
   font-size: 14px;
   color: var(--white);
   transition: border-color var(--transition);
+  /* FIX: prevent input from overflowing its container */
+  box-sizing: border-box;
 }
 .form-input::placeholder { color: rgba(255,255,255,0.3); }
 .form-input:focus { border-color: var(--gold); outline: none; }
@@ -372,6 +404,7 @@ input, select, textarea, button { font-family: var(--font); }
   cursor: pointer;
   margin-top: 6px;
   transition: background var(--transition), box-shadow var(--transition);
+  box-sizing: border-box;
 }
 .form-submit:hover {
   background: var(--gold-dark);
@@ -401,6 +434,9 @@ input, select, textarea, button { font-family: var(--font); }
   border: none;
   cursor: pointer;
   transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  /* FIX: prevent button from breaking layout */
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .btn-primary:hover {
   background: var(--gold-dark);
@@ -422,6 +458,8 @@ input, select, textarea, button { font-family: var(--font); }
   border: 2px solid var(--gold);
   cursor: pointer;
   transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 .btn-outline:hover { background: rgba(201,169,110,0.08); color: var(--gold-dark); }
 .btn-center { display: block; width: fit-content; margin: 0 auto; }
@@ -433,6 +471,7 @@ input, select, textarea, button { font-family: var(--font); }
   background: var(--white);
   padding: 72px 0;
   border-bottom: 1px solid var(--border);
+  overflow: hidden;
 }
 .intro-grid {
   display: grid;
@@ -459,6 +498,7 @@ input, select, textarea, button { font-family: var(--font); }
 .why-section {
   background: var(--body-bg);
   padding: 80px 0;
+  overflow: hidden;
 }
 .why-grid {
   display: grid;
@@ -475,6 +515,8 @@ input, select, textarea, button { font-family: var(--font); }
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
   position: relative;
   overflow: hidden;
+  /* FIX: ensure cards don't overflow grid */
+  min-width: 0;
 }
 .why-card::before {
   content: '';
@@ -493,7 +535,6 @@ input, select, textarea, button { font-family: var(--font); }
 }
 .why-card:hover::before { transform: scaleX(1); }
 
-/* ── ICON: white bg square, gold tint border, image inside ── */
 .why-card__icon {
   width: 64px;
   height: 64px;
@@ -521,7 +562,6 @@ input, select, textarea, button { font-family: var(--font); }
   transform: scale(1.06) rotate(-3deg);
 }
 
-/* Remove old top-row layout — icon now sits alone above title */
 .why-card__top { display: none; }
 
 .why-card h3 {
@@ -544,6 +584,7 @@ input, select, textarea, button { font-family: var(--font); }
   background: var(--white);
   padding: 80px 0;
   border-top: 1px solid var(--border);
+  overflow: hidden;
 }
 .cms-grid {
   display: grid;
@@ -552,19 +593,28 @@ input, select, textarea, button { font-family: var(--font); }
   align-items: center;
   margin-top: 48px;
 }
-.cms-img-stack { position: relative; }
+.cms-img-stack {
+  position: relative;
+  /* FIX: give enough bottom space for the absolutely positioned decor image */
+  padding-bottom: 40px;
+}
 .cms-img-stack__main {
   width: 100%;
   border-radius: var(--radius);
   box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+  position: relative;
+  z-index: 1;
 }
 .cms-img-stack__decor {
   position: absolute;
-  bottom: -24px; right: -24px;
-  width: 55%;
+  bottom: 0;
+  /* FIX: keep decor inside bounds — was -24px right which caused overflow */
+  right: -12px;
+  width: 50%;
   border-radius: 10px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   border: 4px solid var(--white);
+  z-index: 2;
 }
 
 /* ===========================
@@ -574,6 +624,7 @@ input, select, textarea, button { font-family: var(--font); }
   background: var(--body-bg);
   padding: 80px 0;
   border-top: 1px solid var(--border);
+  overflow: hidden;
 }
 .portfolio-grid {
   display: grid;
@@ -588,6 +639,8 @@ input, select, textarea, button { font-family: var(--font); }
   box-shadow: 0 4px 18px rgba(0,0,0,0.07);
   transition: transform var(--transition), box-shadow var(--transition);
   cursor: pointer;
+  /* FIX: ensure card stays in grid cell */
+  min-width: 0;
 }
 .portfolio-card:hover {
   transform: translateY(-6px);
@@ -640,10 +693,11 @@ a.portfolio-card__label:hover { color: var(--gold); }
   background: var(--dark);
   padding: 80px 0;
   border-top: 1px solid rgba(255,255,255,0.06);
+  overflow: hidden;
 }
 .pricing-section .section-divider__label { color: var(--gold); }
 .pricing-section .section-divider__dot { background: var(--gold); }
-.pricing-section .section-divider__line { background: linear-gradient(to right, rgba(201,169,110,0.3), transparent); }
+.pricing-section .section-divider__line { background: linear-gradient(to right, rgba(201,169,110,0.3), transparent); min-width: 0; }
 .pricing-section .section-divider--center .section-divider__line:first-of-type {
   background: linear-gradient(to left, rgba(201,169,110,0.3), transparent);
 }
@@ -666,6 +720,8 @@ a.portfolio-card__label:hover { color: var(--gold); }
   flex-direction: column;
   transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
   position: relative;
+  /* FIX: prevent overflow inside grid */
+  min-width: 0;
 }
 .pricing-card::before {
   content: '';
@@ -788,6 +844,7 @@ a.portfolio-card__label:hover { color: var(--gold); }
   background: var(--surface);
   padding: 80px 0;
   border-top: 1px solid var(--border);
+  overflow: hidden;
 }
 .hosting-grid {
   display: grid;
@@ -796,7 +853,11 @@ a.portfolio-card__label:hover { color: var(--gold); }
   align-items: center;
   margin-top: 40px;
 }
-.hosting-grid img { max-width: 380px; }
+.hosting-grid img {
+  max-width: 380px;
+  /* FIX: prevent image from causing overflow */
+  width: 100%;
+}
 
 /* ===========================
    FAQ SECTION
@@ -805,6 +866,7 @@ a.portfolio-card__label:hover { color: var(--gold); }
   padding: 80px 0;
   background: var(--white);
   border-top: 1px solid var(--border);
+  overflow: hidden;
 }
 .faq-layout {
   display: grid;
@@ -894,6 +956,8 @@ a.portfolio-card__label:hover { color: var(--gold); }
   gap: 14px;
   text-align: left;
   transition: color var(--transition);
+  /* FIX: prevent button text from overflowing */
+  box-sizing: border-box;
 }
 .faq-item.open .faq-btn { color: var(--gold); }
 .faq-icon {
@@ -935,6 +999,7 @@ a.portfolio-card__label:hover { color: var(--gold); }
   text-align: center;
   background: var(--surface);
   border-top: 1px solid var(--border);
+  overflow: hidden;
 }
 .cta-section h2 {
   font-size: clamp(24px, 3.5vw, 36px);
@@ -971,6 +1036,7 @@ a.portfolio-card__label:hover { color: var(--gold); }
   color: var(--dark);
   border: 2px solid var(--dark);
   transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
 }
 .btn-dark:hover { background: var(--dark); color: var(--white); }
 
@@ -1027,34 +1093,184 @@ a.portfolio-card__label:hover { color: var(--gold); }
 }
 
 /* ===========================
-   RESPONSIVE
+   RESPONSIVE — TABLET (≤ 1024px)
+   =========================== */
+@media (max-width: 1024px) {
+  .hero__grid {
+    grid-template-columns: 1fr 360px;
+    gap: 36px;
+  }
+}
+
+/* ===========================
+   RESPONSIVE — MOBILE-LANDSCAPE / TABLET (≤ 900px)
    =========================== */
 @media (max-width: 900px) {
-  .hero__grid { grid-template-columns: 1fr; gap: 32px; }
-  .hero-form-card { max-width: 480px; }
-  .hero__proof-strip { grid-template-columns: repeat(2, 1fr); }
-  .intro-grid { grid-template-columns: 1fr; }
-  .intro-grid__img { max-height: 280px; }
+  .hero__grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  /* FIX: form card full width but capped sensibly */
+  .hero-form-card {
+    max-width: 100%;
+    width: 100%;
+  }
+  /* FIX: 4-col proof strip → 2-col */
+  .hero__proof-strip {
+    grid-template-columns: repeat(2, 1fr);
+    margin-top: 32px;
+    padding-top: 0;
+    border-top: none;
+  }
+  .intro-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .intro-grid__img {
+    max-height: 280px;
+  }
   .why-grid { grid-template-columns: repeat(2, 1fr); }
-  .cms-grid { grid-template-columns: 1fr; }
-  .cms-img-stack { margin-bottom: 50px; }
+  .cms-grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  /* FIX: give decor image more room on mobile so it doesn't clip */
+  .cms-img-stack {
+    margin-bottom: 60px;
+    padding-bottom: 50px;
+  }
+  .cms-img-stack__decor {
+    right: 0;
+    bottom: -10px;
+    width: 48%;
+  }
   .portfolio-grid { grid-template-columns: repeat(2, 1fr); }
-  .pricing-grid { grid-template-columns: 1fr; max-width: 460px; margin-left: auto; margin-right: auto; }
-  .hosting-grid { grid-template-columns: 1fr; }
-  .hosting-grid img { width: 100%; max-width: 340px; margin: 0 auto; }
-  .faq-layout { grid-template-columns: 1fr; gap: 32px; }
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    max-width: 460px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hosting-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .hosting-grid img {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  .faq-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
   .faq-sidebar { position: static; }
 }
-@media (max-width: 560px) {
+
+/* ===========================
+   RESPONSIVE — MOBILE (≤ 640px)
+   =========================== */
+@media (max-width: 640px) {
+  /* FIX: increase container padding on small screens */
+  .container {
+    padding: 0 16px;
+  }
   .why-grid { grid-template-columns: 1fr; }
   .portfolio-grid { grid-template-columns: 1fr; }
-  .hero { padding: 48px 0 52px; }
-  .why-section, .cms-section, .portfolio-section, .pricing-section,
-  .hosting-section, .faq-section, .cta-section { padding: 52px 0; }
+  .hero {
+    padding: 40px 0 48px;
+  }
+  .hero h1 {
+    font-size: clamp(24px, 7vw, 34px);
+  }
+  /* FIX: proof strip 1-col on very small screens to prevent overflow */
+  .hero__proof-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  /* FIX: stacked buttons take full width on mobile */
+  .hero__btns {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .hero__btns .btn-primary,
+  .hero__btns .btn-outline {
+    width: 100%;
+    justify-content: center;
+  }
+  .cta-btns {
+    flex-direction: column;
+    align-items: center;
+  }
+  .why-section,
+  .cms-section,
+  .portfolio-section,
+  .pricing-section,
+  .hosting-section,
+  .faq-section,
+  .cta-section {
+    padding: 52px 0;
+  }
+  .intro-section {
+    padding: 52px 0;
+  }
+  /* FIX: smaller section headings on mobile */
+  .section-heading {
+    font-size: clamp(22px, 6vw, 28px);
+  }
+  .section-subtext {
+    font-size: 15px;
+    margin-bottom: 32px;
+  }
+  /* FIX: CMS decorative image less aggressive on mobile */
+  .cms-img-stack__decor {
+    display: none;
+  }
+  .cms-img-stack {
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  /* FIX: FAQ button text wrapping */
+  .faq-btn {
+    font-size: 14px;
+    padding: 16px;
+  }
+  /* FIX: hero form card padding */
+  .hero-form-card {
+    padding: 24px 18px;
+  }
+  /* FIX: pricing cards full width comfortable */
+  .pricing-grid {
+    max-width: 100%;
+  }
 }
+
+/* ===========================
+   RESPONSIVE — VERY SMALL (≤ 400px)
+   =========================== */
 @media (max-width: 400px) {
-  .faq-btn { font-size: 14px; padding: 16px; }
-  .hero h1 { font-size: 26px; }
+  .container {
+    padding: 0 14px;
+  }
+  .faq-btn { font-size: 13px; padding: 14px; gap: 8px; }
+  .hero h1 { font-size: 23px; }
+  /* FIX: proof strip single column on tiny screens */
+  .hero__proof-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hero__proof-item {
+    padding: 14px 12px;
+  }
+  .hero__proof-item strong {
+    font-size: 18px;
+  }
+  .hero__proof-badge {
+    display: none;
+  }
+  .btn-primary, .btn-outline, .btn-dark {
+    font-size: 14px;
+    padding: 0 20px;
+    height: 46px;
+  }
 }
 </style>
 </head>
@@ -1189,8 +1405,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
     <p class="section-subtext section-subtext--center reveal">We don't use templates. Every pixel is crafted specifically for your brand, your audience, and your goals.</p>
 
     <div class="why-grid">
-
-      <!-- Card 1: Custom Design -->
       <div class="why-card reveal">
         <div class="why-card__icon">
           <img src="assets/create-advantages--1.webp" alt="Custom Design icon">
@@ -1198,8 +1412,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
         <h3>Custom Design</h3>
         <p>Every website is designed from scratch by our team — unique, on-brand, and built to stand out from your competitors.</p>
       </div>
-
-      <!-- Card 2: UX/UI Excellence -->
       <div class="why-card reveal" style="transition-delay:0.06s">
         <div class="why-card__icon">
           <img src="assets/create-advantages--2.webp" alt="UX/UI Excellence icon">
@@ -1207,8 +1419,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
         <h3>UX/UI Excellence</h3>
         <p>Intuitive layouts and well-thought-out structure that guide your visitors toward conversion — on every screen size.</p>
       </div>
-
-      <!-- Card 3: Clean Code -->
       <div class="why-card reveal" style="transition-delay:0.12s">
         <div class="why-card__icon">
           <img src="assets/create-advantages--3.webp" alt="Clean Code icon">
@@ -1216,8 +1426,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
         <h3>Clean Code</h3>
         <p>Built on PHP, HTML/CSS/JS to the latest standards. Organized, maintainable code that any developer can work with.</p>
       </div>
-
-      <!-- Card 4: Custom CMS — same style as others, no dark background -->
       <div class="why-card reveal" style="transition-delay:0.18s">
         <div class="why-card__icon">
           <img src="assets/create-advantages--4.webp" alt="Custom CMS icon">
@@ -1225,8 +1433,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
         <h3>Custom CMS</h3>
         <p>Our proprietary Marketing with Fahad 6.0 CMS keeps your site SEO-friendly, secure, and easy to manage — without WordPress bloat.</p>
       </div>
-
-      <!-- Card 5: Professional Content -->
       <div class="why-card reveal" style="transition-delay:0.24s">
         <div class="why-card__icon">
           <img src="assets/create-advantages--5.webp" alt="Professional Content icon">
@@ -1234,8 +1440,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
         <h3>Professional Content</h3>
         <p>Words drive traffic. We create quality, keyword-rich content that attracts the right customers and improves your rankings.</p>
       </div>
-
-      <!-- Card 6: 24/7 Support -->
       <div class="why-card reveal" style="transition-delay:0.30s">
         <div class="why-card__icon">
           <img src="assets/create-advantages--6.webp" alt="24/7 Support icon">
@@ -1243,7 +1447,6 @@ a.portfolio-card__label:hover { color: var(--gold); }
         <h3>24/7 Support</h3>
         <p>A dedicated project manager always on hand — our clients rest easy knowing expert help is never more than a message away.</p>
       </div>
-
     </div>
 
     <div style="text-align:center;margin-top:44px;" class="reveal">
@@ -1272,7 +1475,7 @@ a.portfolio-card__label:hover { color: var(--gold); }
       </div>
       <div class="reveal" style="transition-delay:0.1s">
         <p>With our custom-developed CMS — Marketing with Fahad 6.0 — our developers can embed and customize any feature within the website. Not only will the end product be unique, but thanks to the optimized code, any developer will be able to make changes to the design and content in the future.</p>
-        <img src="assets/cms-img-2.webp" alt="CMS interface screenshot" style="border-radius:var(--radius);box-shadow:0 8px 28px rgba(0,0,0,0.1);margin-top:20px;">
+        <img src="assets/cms-img-2.webp" alt="CMS interface screenshot" style="border-radius:var(--radius);box-shadow:0 8px 28px rgba(0,0,0,0.1);margin-top:20px;width:100%;">
       </div>
     </div>
   </div>
@@ -1415,7 +1618,7 @@ a.portfolio-card__label:hover { color: var(--gold); }
         </div>
         <ul class="pricing-card__list">
           <li>Brand new bespoke design in Photoshop or Figma</li>
-          <li>Responsive front end development</li>
+          <li>Fully responsive front end development</li>
           <li>Custom CMS with full e-commerce functionality</li>
         </ul>
         <div class="pricing-card__foot">
