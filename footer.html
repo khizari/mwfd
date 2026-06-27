@@ -108,17 +108,18 @@
     min-width: 0;
   }
 
-  /* Logo + map + dial icon row */
+  /* ── Logo + map + dial icon — always row, never stack ── */
   .l-footer .f-logo-map {
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
     align-items: center;
-    gap: 20px;
+    gap: 14px;
     min-width: 0;
   }
 
   .l-footer .f-logo img {
-    height: 100px;
+    height: 80px;
     width: auto;
     display: block;
     margin: 0;
@@ -132,8 +133,8 @@
   }
 
   .l-footer .f-map-link img {
-    width: 140px;
-    height: 100px;
+    width: 110px;
+    height: 80px;
     object-fit: cover;
     border-radius: 10px;
     border: 1px solid var(--f-gold-bdr);
@@ -209,10 +210,11 @@
   /* ══════════════════════════════
      MOBILE PHONE DIAL ICON
      — hidden on desktop
-     — sits next to map, same height, on mobile/tablet
+     — sits next to map in same row, same height
   ══════════════════════════════ */
   .f-mobile-dial {
     display: none;
+    flex-shrink: 0;
   }
 
   .f-mobile-dial a {
@@ -229,14 +231,11 @@
     transition: opacity 0.2s, transform 0.2s;
   }
 
-  .f-mobile-dial a:hover {
-    opacity: 0.8;
-    transform: scale(1.05);
-  }
+  .f-mobile-dial a:hover { opacity: 0.8; transform: scale(1.05); }
 
   .f-mobile-dial a img {
-    width: 100%;
-    height: 100%;
+    width: 80px;
+    height: 80px;
     display: block;
     object-fit: contain;
   }
@@ -248,9 +247,9 @@
     .l-footer .f-top  { gap: 36px; padding: 44px 28px 36px; }
     .l-footer .f-nav  { gap: 0 28px; }
     .l-footer .f-right { gap: 24px; }
-    .l-footer .f-map-link img { width: 120px; height: 90px; }
-    .l-footer .f-logo img { height: 90px; }
-    .l-footer .f-logo-map { gap: 16px; }
+    .l-footer .f-map-link img { width: 110px; height: 80px; }
+    .l-footer .f-logo img { height: 80px; }
+    .l-footer .f-logo-map { gap: 14px; }
   }
 
   /* ══════════════════════════════
@@ -270,17 +269,14 @@
       grid-template-columns: auto 1fr;
       gap: 24px;
     }
-    .l-footer .f-map-link img { width: 110px; height: 80px; }
-    .l-footer .f-logo img { height: 80px; }
 
-    /* Show dial icon next to map, match map height */
+    /* Show dial icon — same height as map */
     .f-mobile-dial {
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 110px;
+      width: 80px;
       height: 80px;
-      flex-shrink: 0;
     }
   }
 
@@ -298,15 +294,13 @@
     .l-footer .f-right { grid-template-columns: 1fr; gap: 20px; }
     .l-footer .f-whatsapp { width: 100%; justify-content: center; }
 
-    .l-footer .f-logo-map { flex-direction: row; }
+    /* Keep row — shrink all three to fit */
+    .l-footer .f-logo-map { gap: 10px; }
     .l-footer .f-map-link img { width: 90px; height: 70px; }
     .l-footer .f-logo img { height: 70px; }
-    .l-footer .f-logo-map { gap: 14px; }
 
-    .f-mobile-dial {
-      width: 90px;
-      height: 70px;
-    }
+    .f-mobile-dial { width: 70px; height: 70px; }
+    .f-mobile-dial a img { width: 70px; height: 70px; }
   }
 
   /* ══════════════════════════════
@@ -316,14 +310,13 @@
     .l-footer .f-social-icons a { width: 36px; height: 36px; }
     .l-footer .f-whatsapp { font-size: 12px; padding: 10px 14px; }
 
-    .l-footer .f-logo-map { flex-direction: column; align-items: flex-start; gap: 12px; }
-    .l-footer .f-map-link img { width: 100%; max-width: 200px; height: 100px; }
-    .l-footer .f-logo img { height: 60px; }
+    /* Still row — just smaller */
+    .l-footer .f-logo-map { gap: 8px; }
+    .l-footer .f-map-link img { width: 75px; height: 60px; }
+    .l-footer .f-logo img { height: 55px; }
 
-    .f-mobile-dial {
-      width: 70px;
-      height: 70px;
-    }
+    .f-mobile-dial { width: 60px; height: 60px; }
+    .f-mobile-dial a img { width: 60px; height: 60px; }
   }
 </style>
 
@@ -388,6 +381,7 @@
 
     <div class="f-right">
 
+      <!-- Logo + map + phone icon always in one row -->
       <div class="f-logo-map">
         <div class="f-logo">
           <img
@@ -401,13 +395,10 @@
           <img src="/assets/footer-map-burjkhalifa.webp" alt="Burj Khalifa, Dubai">
         </a>
 
-        <!-- Phone dial icon — mobile/tablet only, next to map, same height -->
+        <!-- Phone dial icon — mobile/tablet only, next to map, same height, no border -->
         <div class="f-mobile-dial">
           <a href="tel:0526086977" aria-label="Call us">
-            <img
-              src="/assets/phone-icon.png"
-              alt="Call"
-            >
+            <img src="/assets/phone-icon.png" alt="Call">
           </a>
         </div>
 
@@ -482,7 +473,6 @@
         threshold: 0,
         rootMargin: '0px'
       });
-
       observer.observe(footer);
     } else if (footer) {
       function checkFooterVisibility() {
