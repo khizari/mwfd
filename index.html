@@ -185,7 +185,11 @@ h1 .accent, h2 .accent, h3 .accent { color: var(--gold); }
 .hero-desktop {
   position: relative;
   height: 100svh;
-  min-height: 520px;
+  max-height: 640px;   /* FIX: prevents the hero from filling the whole screen
+                           in mobile Chrome "Desktop site" mode, where the
+                           reported viewport is wide (~980px+) but the
+                           physical screen is short and narrow */
+  min-height: 420px;
   overflow: hidden;
   background: #1a1a2e;
 }
@@ -306,6 +310,44 @@ h1 .accent, h2 .accent, h3 .accent { color: var(--gold); }
    ============================================================ */
 @media (min-width: 821px) { .hero-mobile { display: none; } }
 @media (max-width: 820px) { .hero-desktop { display: none; } }
+
+/* ============================================================
+   FIX: "Fake desktop" band — Chrome "Desktop site" mode on phones
+   Reported viewport lands roughly 821–1100px wide, but the physical
+   screen is short and narrow, so the unmodified desktop hero looks
+   oversized and the photo subject gets cropped out of frame.
+   This tightens sizing and re-frames the photo for that band only;
+   real desktop/laptop screens (>1100px) are untouched.
+   ============================================================ */
+@media (min-width: 821px) and (max-width: 1100px) {
+  .hero-desktop {
+    max-height: 480px;
+    min-height: 360px;
+  }
+  .hero-desktop__cta {
+    left: 24px;
+    max-width: 320px;
+  }
+  .hero-desktop__title {
+    font-size: 1.5rem;
+  }
+  .hero-desktop__sub {
+    font-size: 13px;
+    margin-bottom: 14px;
+  }
+  .hero-desktop__badge {
+    font-size: 10px;
+    padding: 4px 12px;
+  }
+  .hero-desktop__btns .btn-gold,
+  .hero-desktop__btns .btn-outline-white {
+    font-size: 13px;
+    padding: 10px 18px;
+  }
+  .hero-desktop__slide img {
+    object-position: left center;
+  }
+}
 
 /* ============================================================
    INTRO / ABOUT
